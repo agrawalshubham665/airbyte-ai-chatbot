@@ -3,6 +3,8 @@
 Learning project to build AI-powered chatbot to interact with e-commerce data.
 
 AI+data application diagram and flow, below:
+
+
 <img width="223" alt="image" src="https://github.com/user-attachments/assets/a1c38df5-4419-445d-bb70-1c8140f26802" />
 
 # Steps implemented
