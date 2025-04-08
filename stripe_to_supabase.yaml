@@ -1,0 +1,657 @@
+version: 6.44.0
+
+type: DeclarativeSource
+
+check:
+  type: CheckStream
+  stream_names:
+    - Customer
+
+definitions:
+  streams:
+    Customer:
+      type: DeclarativeStream
+      name: Customer
+      retriever:
+        type: SimpleRetriever
+        requester:
+          $ref: "#/definitions/base_requester"
+          path: /v1/customers
+          http_method: GET
+        record_selector:
+          type: RecordSelector
+          extractor:
+            type: DpathExtractor
+            field_path:
+              - data
+        decoder:
+          type: JsonDecoder
+      schema_loader:
+        type: InlineSchemaLoader
+        schema:
+          $ref: "#/schemas/Customer"
+    Search Customer:
+      type: DeclarativeStream
+      name: Search Customer
+      retriever:
+        type: SimpleRetriever
+        requester:
+          $ref: "#/definitions/base_requester"
+          path: /v1/customers/search
+          http_method: GET
+          request_parameters:
+            query: email:"charlie.jones@example.com"
+        record_selector:
+          type: RecordSelector
+          extractor:
+            type: DpathExtractor
+            field_path: []
+        decoder:
+          type: JsonDecoder
+      schema_loader:
+        type: InlineSchemaLoader
+        schema:
+          $ref: "#/schemas/Search Customer"
+    Invoices:
+      type: DeclarativeStream
+      name: Invoices
+      retriever:
+        type: SimpleRetriever
+        requester:
+          $ref: "#/definitions/base_requester"
+          path: /v1/invoices
+          http_method: GET
+        record_selector:
+          type: RecordSelector
+          extractor:
+            type: DpathExtractor
+            field_path:
+              - data
+        decoder:
+          type: JsonDecoder
+      schema_loader:
+        type: InlineSchemaLoader
+        schema:
+          $ref: "#/schemas/Invoices"
+    Products:
+      type: DeclarativeStream
+      name: Products
+      retriever:
+        type: SimpleRetriever
+        requester:
+          $ref: "#/definitions/base_requester"
+          path: /v1/products
+          http_method: GET
+        record_selector:
+          type: RecordSelector
+          extractor:
+            type: DpathExtractor
+            field_path:
+              - data
+        decoder:
+          type: JsonDecoder
+      schema_loader:
+        type: InlineSchemaLoader
+        schema:
+          $ref: "#/schemas/Products"
+  base_requester:
+    type: HttpRequester
+    url_base: https://api.stripe.com
+    authenticator:
+      type: BearerAuthenticator
+      api_token: "{{ config[\"api_key\"] }}"
+
+streams:
+  - $ref: "#/definitions/streams/Customer"
+  - $ref: "#/definitions/streams/Search Customer"
+  - $ref: "#/definitions/streams/Invoices"
+  - $ref: "#/definitions/streams/Products"
+
+spec:
+  type: Spec
+  connection_specification:
+    type: object
+    $schema: http://json-schema.org/draft-07/schema#
+    required:
+      - api_key
+    properties:
+      api_key:
+        type: string
+        order: 0
+        title: API Key
+        airbyte_secret: true
+    additionalProperties: true
+
+metadata:
+  autoImportSchema:
+    Customer: true
+    Search Customer: true
+    Invoices: true
+    Products: true
+  testedStreams:
+    Customer:
+      hasRecords: true
+      streamHash: f367150c51c831bf82e60e4f9e43b9996e68b30d
+      hasResponse: true
+      primaryKeysAreUnique: true
+      primaryKeysArePresent: true
+      responsesAreSuccessful: true
+    Search Customer:
+      hasRecords: true
+      streamHash: a47eb3a7d515cf55dbf7d65b58e2d2a500c13182
+      hasResponse: true
+      primaryKeysAreUnique: true
+      primaryKeysArePresent: true
+      responsesAreSuccessful: true
+    Invoices:
+      hasRecords: true
+      streamHash: 4483a5932c39e38dc0e170ff3c7d9d9c5d6c8fae
+      hasResponse: true
+      primaryKeysAreUnique: true
+      primaryKeysArePresent: true
+      responsesAreSuccessful: true
+    Products:
+      hasRecords: true
+      streamHash: dbf8c8c4f1a2584c7eb618f7031c5abffc3ed652
+      hasResponse: true
+      primaryKeysAreUnique: true
+      primaryKeysArePresent: true
+      responsesAreSuccessful: true
+  assist: {}
+
+schemas:
+  Customer:
+    type: object
+    $schema: http://json-schema.org/schema#
+    additionalProperties: true
+    properties:
+      description:
+        type:
+          - string
+          - "null"
+      metadata:
+        type:
+          - object
+          - "null"
+      balance:
+        type:
+          - number
+          - "null"
+      created:
+        type:
+          - number
+          - "null"
+      currency:
+        type:
+          - string
+          - "null"
+      delinquent:
+        type:
+          - boolean
+          - "null"
+      email:
+        type:
+          - string
+          - "null"
+      id:
+        type:
+          - string
+          - "null"
+      invoice_prefix:
+        type:
+          - string
+          - "null"
+      invoice_settings:
+        type:
+          - object
+          - "null"
+        properties: {}
+      livemode:
+        type:
+          - boolean
+          - "null"
+      name:
+        type:
+          - string
+          - "null"
+      next_invoice_sequence:
+        type:
+          - number
+          - "null"
+      object:
+        type:
+          - string
+          - "null"
+      preferred_locales:
+        type:
+          - array
+          - "null"
+      tax_exempt:
+        type:
+          - string
+          - "null"
+  Search Customer:
+    type: object
+    $schema: http://json-schema.org/schema#
+    additionalProperties: true
+    properties:
+      data:
+        type:
+          - array
+          - "null"
+        items:
+          type:
+            - object
+            - "null"
+          properties:
+            description:
+              type:
+                - string
+                - "null"
+            metadata:
+              type:
+                - object
+                - "null"
+            balance:
+              type:
+                - number
+                - "null"
+            created:
+              type:
+                - number
+                - "null"
+            currency:
+              type:
+                - string
+                - "null"
+            delinquent:
+              type:
+                - boolean
+                - "null"
+            email:
+              type:
+                - string
+                - "null"
+            id:
+              type:
+                - string
+                - "null"
+            invoice_prefix:
+              type:
+                - string
+                - "null"
+            invoice_settings:
+              type:
+                - object
+                - "null"
+              properties: {}
+            livemode:
+              type:
+                - boolean
+                - "null"
+            name:
+              type:
+                - string
+                - "null"
+            next_invoice_sequence:
+              type:
+                - number
+                - "null"
+            object:
+              type:
+                - string
+                - "null"
+            preferred_locales:
+              type:
+                - array
+                - "null"
+            tax_exempt:
+              type:
+                - string
+                - "null"
+      has_more:
+        type:
+          - boolean
+          - "null"
+      object:
+        type:
+          - string
+          - "null"
+      url:
+        type:
+          - string
+          - "null"
+  Invoices:
+    type: object
+    $schema: http://json-schema.org/schema#
+    additionalProperties: true
+    properties:
+      description:
+        type:
+          - string
+          - "null"
+      metadata:
+        type:
+          - object
+          - "null"
+      account_country:
+        type:
+          - string
+          - "null"
+      account_name:
+        type:
+          - string
+          - "null"
+      amount_due:
+        type:
+          - number
+          - "null"
+      amount_overpaid:
+        type:
+          - number
+          - "null"
+      amount_paid:
+        type:
+          - number
+          - "null"
+      amount_remaining:
+        type:
+          - number
+          - "null"
+      amount_shipping:
+        type:
+          - number
+          - "null"
+      attempt_count:
+        type:
+          - number
+          - "null"
+      attempted:
+        type:
+          - boolean
+          - "null"
+      auto_advance:
+        type:
+          - boolean
+          - "null"
+      automatic_tax:
+        type:
+          - object
+          - "null"
+        properties:
+          enabled:
+            type:
+              - boolean
+              - "null"
+      billing_reason:
+        type:
+          - string
+          - "null"
+      collection_method:
+        type:
+          - string
+          - "null"
+      created:
+        type:
+          - number
+          - "null"
+      currency:
+        type:
+          - string
+          - "null"
+      customer:
+        type:
+          - string
+          - "null"
+      customer_email:
+        type:
+          - string
+          - "null"
+      customer_name:
+        type:
+          - string
+          - "null"
+      customer_tax_exempt:
+        type:
+          - string
+          - "null"
+      customer_tax_ids:
+        type:
+          - array
+          - "null"
+      default_tax_rates:
+        type:
+          - array
+          - "null"
+      discounts:
+        type:
+          - array
+          - "null"
+      effective_at:
+        type:
+          - number
+          - "null"
+      ending_balance:
+        type:
+          - number
+          - "null"
+      hosted_invoice_url:
+        type:
+          - string
+          - "null"
+      id:
+        type:
+          - string
+          - "null"
+      invoice_pdf:
+        type:
+          - string
+          - "null"
+      issuer:
+        type:
+          - object
+          - "null"
+        properties:
+          type:
+            type:
+              - string
+              - "null"
+      lines:
+        type:
+          - object
+          - "null"
+        properties:
+          data:
+            type:
+              - array
+              - "null"
+          has_more:
+            type:
+              - boolean
+              - "null"
+          object:
+            type:
+              - string
+              - "null"
+          total_count:
+            type:
+              - number
+              - "null"
+          url:
+            type:
+              - string
+              - "null"
+      livemode:
+        type:
+          - boolean
+          - "null"
+      number:
+        type:
+          - string
+          - "null"
+      object:
+        type:
+          - string
+          - "null"
+      paid:
+        type:
+          - boolean
+          - "null"
+      paid_out_of_band:
+        type:
+          - boolean
+          - "null"
+      payment_settings:
+        type:
+          - object
+          - "null"
+        properties: {}
+      period_end:
+        type:
+          - number
+          - "null"
+      period_start:
+        type:
+          - number
+          - "null"
+      post_payment_credit_notes_amount:
+        type:
+          - number
+          - "null"
+      pre_payment_credit_notes_amount:
+        type:
+          - number
+          - "null"
+      rendering:
+        type:
+          - object
+          - "null"
+        properties:
+          pdf:
+            type:
+              - object
+              - "null"
+            properties:
+              page_size:
+                type:
+                  - string
+                  - "null"
+      starting_balance:
+        type:
+          - number
+          - "null"
+      status:
+        type:
+          - string
+          - "null"
+      status_transitions:
+        type:
+          - object
+          - "null"
+        properties:
+          finalized_at:
+            type:
+              - number
+              - "null"
+          paid_at:
+            type:
+              - number
+              - "null"
+      subscription_details:
+        type:
+          - object
+          - "null"
+        properties: {}
+      subtotal:
+        type:
+          - number
+          - "null"
+      subtotal_excluding_tax:
+        type:
+          - number
+          - "null"
+      total:
+        type:
+          - number
+          - "null"
+      total_discount_amounts:
+        type:
+          - array
+          - "null"
+      total_excluding_tax:
+        type:
+          - number
+          - "null"
+      total_pretax_credit_amounts:
+        type:
+          - array
+          - "null"
+      total_tax_amounts:
+        type:
+          - array
+          - "null"
+      total_taxes:
+        type:
+          - array
+          - "null"
+      webhooks_delivered_at:
+        type:
+          - number
+          - "null"
+  Products:
+    type: object
+    $schema: http://json-schema.org/schema#
+    additionalProperties: true
+    properties:
+      type:
+        type:
+          - string
+          - "null"
+      description:
+        type:
+          - string
+          - "null"
+      metadata:
+        type:
+          - object
+          - "null"
+      active:
+        type:
+          - boolean
+          - "null"
+      attributes:
+        type:
+          - array
+          - "null"
+      created:
+        type:
+          - number
+          - "null"
+      id:
+        type:
+          - string
+          - "null"
+      images:
+        type:
+          - array
+          - "null"
+      livemode:
+        type:
+          - boolean
+          - "null"
+      marketing_features:
+        type:
+          - array
+          - "null"
+      name:
+        type:
+          - string
+          - "null"
+      object:
+        type:
+          - string
+          - "null"
+      updated:
+        type:
+          - number
+          - "null"
